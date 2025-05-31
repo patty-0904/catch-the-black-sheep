@@ -24,3 +24,14 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+
+
+@font-face {
+  font-family: 'PixelFont';
+  src: url('/fonts/PixelOperator.ttf') format('truetype');
+}
+
+.font-pixel {
+  font-family: 'PixelFont', sans-serif;
+}
