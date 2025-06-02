@@ -1,45 +1,42 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 export default function LevelSelect() {
+  const [selectedLevel, setSelectedLevel] = useState(1)
   const router = useRouter()
-  const [selectedLevel, setSelectedLevel] = useState(null)
 
   const handleStart = () => {
-    if (selectedLevel) {
-      router.push(`/game/level-${selectedLevel}`)
-    }
+    router.push(`/game/play?level=${selectedLevel}`)
   }
 
   return (
-    <div className="min-h-screen bg-[#C7F0D8] flex flex-col items-center justify-center p-6 font-pixel">
-      <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6">選擇關卡</h1>
-      <div className="grid grid-cols-3 gap-4 mb-6">
-        {[1, 2, 3, 4, 5].map((level) => (
+    <div className="flex flex-col items-center justify-center min-h-screen bg-[#FDF6E3] font-pixel text-gray-800 p-6">
+      <h1 className="text-3xl sm:text-4xl font-bold mb-6">選擇關卡</h1>
+
+      <div className="flex space-x-4 mb-8">
+        {[1, 2, 3, 4, 5].map(level => (
           <button
             key={level}
             onClick={() => setSelectedLevel(level)}
-            className={`px-4 py-2 rounded text-lg transition-all border-2 ${
-              selectedLevel === level
-                ? 'bg-black text-white border-black'
-                : 'bg-white text-black border-gray-400 hover:border-black'
-            }`}
+            className={`w-14 h-14 rounded-full text-lg font-bold flex items-center justify-center transition-all duration-200 cursor-pointer
+              ${
+                selectedLevel === level
+                  ? 'bg-black text-white'
+                  : 'bg-gray-400 text-white hover:bg-yellow-600 hover:scale-105'
+              }`}
           >
-            關卡 {level}
+            {level}
           </button>
         ))}
       </div>
 
+      <p className="mb-6 text-lg">目前選擇：關卡 {selectedLevel}</p>
+
       <button
         onClick={handleStart}
-        disabled={!selectedLevel}
-        className={`px-6 py-3 rounded text-lg font-bold transition ${
-          selectedLevel
-            ? 'bg-black text-white hover:bg-gray-800'
-            : 'bg-gray-400 text-gray-200 cursor-not-allowed'
-        }`}
+        className="bg-black text-white px-6 py-3 rounded hover:bg-gray-800 transition"
       >
         開始遊戲
       </button>

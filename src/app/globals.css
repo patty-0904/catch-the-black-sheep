@@ -62,3 +62,75 @@ body {
 .animate-fade-in-out {
   animation: fadeInOut 1.5s ease-in-out;
 }
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes pop-in {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out forwards;
+}
+
+.animate-pop-in {
+  animation: pop-in 0.6s ease-out forwards;
+}
+
+
+@font-face {
+  font-family: 'PixelFont';
+  src: url('/fonts/PixelOperator.ttf') format('truetype');
+  font-display: swap;
+}
+
+.font-pixel {
+  font-family: 'PixelFont', sans-serif;
+}
+
+@keyframes fadeOutQuick {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.animate-fade-out-quick {
+  animation: fadeOutQuick 0.5s ease-in-out forwards;
+}
+
+@keyframes popInQuick {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-pop-in-quick {
+  animation: popInQuick 0.3s ease-out forwards;
+}
+button {
+  outline: 2px dashed red;
+}

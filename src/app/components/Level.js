@@ -173,12 +173,14 @@ const Level = ({ level = 1 }) => {
       >
         {/* 關卡提示文字 */}
         {showLevelText && (
-          <div className="absolute inset-0 z-20 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="text-white text-5xl font-bold animate-fade-in-out">
+          <div className="absolute inset-0 z-20 flex items-center justify-center backdrop-blur-sm bg-black/80 animate-fade-out-quick">
+            <div className="text-white text-5xl font-bold drop-shadow-lg font-pixel animate-pop-in-quick">
               LEVEL {level}
             </div>
           </div>
         )}
+
+
 
         {/* 生命值愛心 */}
         <div className="absolute top-2 left-2 flex gap-2 z-10">
