@@ -8,23 +8,22 @@ const Sheep = ({ id, type, position, direction, onClick, sheepRefs }) => {
   useEffect(() => {
     if (ref.current) {
       sheepRefs.current[id] = {
-        ref: ref,
+        ref,
         type,
         position,
         direction,
       };
     }
-
     return () => {
       delete sheepRefs.current[id];
     };
-  }, [ref, id, type, position, direction, sheepRefs]);
+  }, [id, type, position, direction, sheepRefs]);
 
   const handleClick = () => {
-    setIsFading(true); // 啟動淡出
+    setIsFading(true);
     setTimeout(() => {
-      onClick(); // 淡出結束後觸發父層刪除
-    }, 200); // 與動畫時間同步
+      onClick();
+    }, 200);
   };
 
   const src = type === 'black' ? '/images/black.png' : '/images/white.png';
@@ -38,7 +37,7 @@ const Sheep = ({ id, type, position, direction, onClick, sheepRefs }) => {
       style={{
         left: position.x,
         top: position.y,
-        transition: 'opacity 0.2s ease, transform 0.1s linear',
+        transition: 'opacity 0.2s ease',
       }}
       onClick={handleClick}
     />
