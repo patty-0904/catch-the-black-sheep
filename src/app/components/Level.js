@@ -27,19 +27,21 @@ const Level = ({ level = 1 }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowLevelText(false);
-    }, 1500); // 顯示關卡文字 1.5 秒
+    }, 400); // 顯示關卡文字 1 秒
     return () => clearTimeout(timer);
   }, [level]);
 
   useEffect(() => {
+    if (showLevelText) return;
+  
     const initSheep = () => {
       const getRandom = (min, max) => Math.random() * (max - min) + min;
       const container = containerRef.current;
       if (!container) return;
-
+  
       const { clientWidth, clientHeight } = container;
       const initial = [];
-
+  
       for (let i = 0; i < sheepCount.black + sheepCount.white; i++) {
         const type = i < sheepCount.black ? 'black' : 'white';
         initial.push({
@@ -57,9 +59,10 @@ const Level = ({ level = 1 }) => {
       }
       setSheepData(initial);
     };
-
+  
     initSheep();
-  }, [SPEED]);
+  }, [showLevelText]); // 只有在 showLevelText 為 false 時才初始化
+  
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -79,8 +82,9 @@ const Level = ({ level = 1 }) => {
           x += dx;
           y += dy;
 
-          if (x < 0 || x > maxW - SHEEP_SIZE) dx *= -1;
-          if (y < 0 || y > maxH - SHEEP_SIZE) dy *= -1;
+          if (x < 0 || x > maxW - SHEEP_SIZE) dx = -dx + (Math.random() - 0.5);
+          if (y < 0 || y > maxH - SHEEP_SIZE) dy = -dy + (Math.random() - 0.5);
+
 
           return {
             ...sheep,
@@ -129,9 +133,14 @@ const Level = ({ level = 1 }) => {
     if (life <= 0 && blackCaught < sheepCount.black) {
       router.push('/game/fail');
     } else if (blackCaught >= sheepCount.black && life > 0) {
-      router.push(`/game/level-${level + 1}`);
+      if (level >= 5) {
+        router.push('/game/success'); // 最後一關結束，跳轉 success
+      } else {
+        router.push(`/game/level-${level + 1}`); // 進入下一關
+      }
     }
   }, [life, blackCaught, router, level]);
+  
 
   const handleSheepClick = (clickedSheep) => {
     if (clickedSheep.type === 'white') {

@@ -131,6 +131,24 @@ body {
 .animate-pop-in-quick {
   animation: popInQuick 0.3s ease-out forwards;
 }
-button {
-  outline: 2px dashed red;
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.6s ease-out;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+.font-pixel {
+  font-family: 'Press Start 2P', cursive;
 }
