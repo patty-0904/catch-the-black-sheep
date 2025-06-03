@@ -147,8 +147,3 @@ body {
   animation: fadeIn 0.6s ease-out;
 }
 
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
-
-.font-pixel {
-  font-family: 'Press Start 2P', cursive;
-}

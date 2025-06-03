@@ -15,14 +15,13 @@ const Level = ({ level = 1 }) => {
   const [life, setLife] = useState(3);
   const [blackCaught, setBlackCaught] = useState(0);
   const [showLevelText, setShowLevelText] = useState(true);
+  const [isPaused, setIsPaused] = useState(false); // ✅ 暫停狀態
 
   const sheepRefs = useRef({});
   const containerRef = useRef(null);
   const router = useRouter();
 
   const SHEEP_SIZE = 64;
-
-  // ✅ 調整速度倍數
   const BASE_SPEED = 1.5;
   const SPEED_MULTIPLIER = [1.0, 1.6, 2.2, 3.0, 4.0];
   const SPEED = BASE_SPEED * SPEED_MULTIPLIER[level - 1];
@@ -68,7 +67,7 @@ const Level = ({ level = 1 }) => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (showLevelText) return;
+      if (showLevelText || isPaused) return;
 
       const container = containerRef.current;
       if (!container) return;
@@ -97,7 +96,6 @@ const Level = ({ level = 1 }) => {
           };
         });
 
-        // 避免羊重疊
         for (let i = 0; i < updated.length; i++) {
           for (let j = i + 1; j < updated.length; j++) {
             const a = updated[i];
@@ -128,11 +126,11 @@ const Level = ({ level = 1 }) => {
     }, 20);
 
     return () => clearInterval(interval);
-  }, [SPEED, showLevelText]);
+  }, [SPEED, showLevelText, isPaused]);
 
   useEffect(() => {
     if (life <= 0 && blackCaught < sheepCount.black) {
-      router.push('/game/fail');
+      router.push(`/game/fail?level=${level}`);
     } else if (blackCaught >= sheepCount.black && life > 0) {
       if (level >= 5) {
         router.push('/game/success');
@@ -175,10 +173,18 @@ const Level = ({ level = 1 }) => {
   };
 
   return (
-    <div className="w-screen h-screen bg-[#F3EAC2] flex items-center justify-center p-2">
+    <div
+      className="w-screen h-screen flex items-center justify-center p-2"
+      style={{
+        backgroundImage: "url('/images/wood.png')",
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        filter: 'brightness(1) saturate(1.1)',
+      }}
+    >
       <div
         ref={containerRef}
-        className="relative w-full max-w-[1024px] h-[calc(100vh-32px)]  overflow-hidden"
+        className="relative w-full max-w-[1024px] h-[calc(100vh-32px)] overflow-hidden"
       >
         {/* 背景層 */}
         <div
@@ -191,14 +197,48 @@ const Level = ({ level = 1 }) => {
           }}
         />
 
-        {/* 四角形邊框層 */}
-        <div className="absolute top-0 left-0 w-full h-4 bg-[#4f3d17] z-5" />
-        <div className="absolute bottom-0 left-0 w-full h-4 bg-[#4f3d17] z-5" />
-        <div className="absolute top-0 left-0 h-full w-4 bg-[#4f3d17] z-5" />
-        <div className="absolute top-0 right-0 h-full w-4 bg-[#4f3d17] z-5" />
+        {/* 邊框 */}
+        <div className="absolute top-0 left-0 w-full h-4 bg-[#39210c] z-5" />
+        <div className="absolute bottom-0 left-0 w-full h-4 bg-[#39210c] z-5" />
+        <div className="absolute top-0 left-0 h-full w-4 bg-[#39210c] z-5" />
+        <div className="absolute top-0 right-0 h-full w-4 bg-[#39210c] z-5" />
 
-        {/* 遊戲內容層 */}
-        <div className="absolute inset-0 z-10">
+        {/* 遊戲內容 */}
+        <div className="absolute inset-0 z-10 font-pixel">
+          {/* 暫停按鈕（用圖片） */}
+            <button
+              className="absolute top-4 right-5 z-20 w-12 h-12"
+              onClick={() => setIsPaused(true)}
+            >
+              <img
+                src="/images/pause.png"
+                alt="Pause"
+                className="w-full h-full object-contain hover:scale-110 transition-transform"
+              />
+            </button>
+
+
+          {/* 暫停視窗 */}
+          {isPaused && (
+              <div className="absolute inset-0 z-30 flex items-center justify-center bg-black/60">
+                <div className="bg-[#1f1f1f] border-4 border-white p-6 rounded-md flex flex-col gap-4 items-center">
+                  <button
+                    onClick={() => setIsPaused(false)}
+                    className="text-white font-pixel text-2xl border-2 border-white px-4 py-2 hover:bg-white hover:text-black transition"
+                  >
+                    Continue
+                  </button>
+                  <button
+                    onClick={() => router.push('/')}
+                    className="text-white font-pixel text-2xl border-2 border-white px-4 py-2 hover:bg-white hover:text-black transition"
+                  >
+                    Home
+                  </button>
+                </div>
+              </div>
+            )}
+
+          {/* LEVEL 開場文字 */}
           {showLevelText && (
             <div className="absolute inset-0 z-20 flex items-center justify-center backdrop-blur-sm bg-black/80 animate-fade-out-quick">
               <div className="text-white text-5xl font-bold drop-shadow-lg font-pixel animate-pop-in-quick">
