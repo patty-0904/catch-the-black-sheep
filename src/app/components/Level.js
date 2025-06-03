@@ -21,27 +21,30 @@ const Level = ({ level = 1 }) => {
   const router = useRouter();
 
   const SHEEP_SIZE = 64;
-  const BASE_SPEED = 2;
-  const SPEED = BASE_SPEED + level;
+
+  // ✅ 調整速度倍數
+  const BASE_SPEED = 1.5;
+  const SPEED_MULTIPLIER = [1.0, 1.6, 2.2, 3.0, 4.0];
+  const SPEED = BASE_SPEED * SPEED_MULTIPLIER[level - 1];
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowLevelText(false);
-    }, 400); // 顯示關卡文字 1 秒
+    }, 400);
     return () => clearTimeout(timer);
   }, [level]);
 
   useEffect(() => {
     if (showLevelText) return;
-  
+
     const initSheep = () => {
       const getRandom = (min, max) => Math.random() * (max - min) + min;
       const container = containerRef.current;
       if (!container) return;
-  
+
       const { clientWidth, clientHeight } = container;
       const initial = [];
-  
+
       for (let i = 0; i < sheepCount.black + sheepCount.white; i++) {
         const type = i < sheepCount.black ? 'black' : 'white';
         initial.push({
@@ -59,14 +62,13 @@ const Level = ({ level = 1 }) => {
       }
       setSheepData(initial);
     };
-  
+
     initSheep();
-  }, [showLevelText]); // 只有在 showLevelText 為 false 時才初始化
-  
+  }, [showLevelText, SPEED]);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (showLevelText) return; // 開場文字顯示時暫停動作
+      if (showLevelText) return;
 
       const container = containerRef.current;
       if (!container) return;
@@ -84,7 +86,6 @@ const Level = ({ level = 1 }) => {
 
           if (x < 0 || x > maxW - SHEEP_SIZE) dx = -dx + (Math.random() - 0.5);
           if (y < 0 || y > maxH - SHEEP_SIZE) dy = -dy + (Math.random() - 0.5);
-
 
           return {
             ...sheep,
@@ -134,13 +135,12 @@ const Level = ({ level = 1 }) => {
       router.push('/game/fail');
     } else if (blackCaught >= sheepCount.black && life > 0) {
       if (level >= 5) {
-        router.push('/game/success'); // 最後一關結束，跳轉 success
+        router.push('/game/success');
       } else {
-        router.push(`/game/level-${level + 1}`); // 進入下一關
+        router.push(`/game/level-${level + 1}`);
       }
     }
   }, [life, blackCaught, router, level]);
-  
 
   const handleSheepClick = (clickedSheep) => {
     if (clickedSheep.type === 'white') {
@@ -178,53 +178,70 @@ const Level = ({ level = 1 }) => {
     <div className="w-screen h-screen bg-[#F3EAC2] flex items-center justify-center p-2">
       <div
         ref={containerRef}
-        className="relative w-full max-w-[1024px] h-[calc(100vh-32px)] bg-green-100 rounded-2xl overflow-hidden"
+        className="relative w-full max-w-[1024px] h-[calc(100vh-32px)]  overflow-hidden"
       >
-        {/* 關卡提示文字 */}
-        {showLevelText && (
-          <div className="absolute inset-0 z-20 flex items-center justify-center backdrop-blur-sm bg-black/80 animate-fade-out-quick">
-            <div className="text-white text-5xl font-bold drop-shadow-lg font-pixel animate-pop-in-quick">
-              LEVEL {level}
+        {/* 背景層 */}
+        <div
+          className="absolute inset-0 z-0"
+          style={{
+            backgroundImage: `url('/images/background.png')`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            filter: 'brightness(1.2) contrast(0.9)',
+          }}
+        />
+
+        {/* 四角形邊框層 */}
+        <div className="absolute top-0 left-0 w-full h-4 bg-[#4f3d17] z-5" />
+        <div className="absolute bottom-0 left-0 w-full h-4 bg-[#4f3d17] z-5" />
+        <div className="absolute top-0 left-0 h-full w-4 bg-[#4f3d17] z-5" />
+        <div className="absolute top-0 right-0 h-full w-4 bg-[#4f3d17] z-5" />
+
+        {/* 遊戲內容層 */}
+        <div className="absolute inset-0 z-10">
+          {showLevelText && (
+            <div className="absolute inset-0 z-20 flex items-center justify-center backdrop-blur-sm bg-black/80 animate-fade-out-quick">
+              <div className="text-white text-5xl font-bold drop-shadow-lg font-pixel animate-pop-in-quick">
+                LEVEL {level}
+              </div>
             </div>
+          )}
+
+          {/* 生命值愛心 */}
+          <div className="absolute top-4 left-5 flex gap-2 z-10">
+            {[...Array(3)].map((_, i) => (
+              <img
+                key={i}
+                src={i < life ? '/images/heart.png' : '/images/heart_gray.png'}
+                alt="life"
+                className="w-10 h-10"
+              />
+            ))}
           </div>
-        )}
 
+          {/* 羊群 */}
+          {sheepData.map(sheep => (
+            <Sheep
+              key={sheep.id}
+              id={sheep.id}
+              type={sheep.type}
+              position={sheep.position}
+              direction={sheep.direction}
+              onClick={() => handleSheepClick(sheep)}
+              sheepRefs={sheepRefs}
+            />
+          ))}
 
-
-        {/* 生命值愛心 */}
-        <div className="absolute top-2 left-2 flex gap-2 z-10">
-          {[...Array(3)].map((_, i) => (
-            <img
-              key={i}
-              src={i < life ? '/images/heart.png' : '/images/heart_gray.png'}
-              alt="life"
-              className="w-8 h-8"
+          {/* 掉落愛心動畫 */}
+          {hearts.map(h => (
+            <FallingHeart
+              key={h.id}
+              x={h.x}
+              y={h.y}
+              onDone={() => setHearts(prev => prev.filter(ph => ph.id !== h.id))}
             />
           ))}
         </div>
-
-        {/* 羊群 */}
-        {sheepData.map(sheep => (
-          <Sheep
-            key={sheep.id}
-            id={sheep.id}
-            type={sheep.type}
-            position={sheep.position}
-            direction={sheep.direction}
-            onClick={() => handleSheepClick(sheep)}
-            sheepRefs={sheepRefs}
-          />
-        ))}
-
-        {/* 掉落愛心動畫 */}
-        {hearts.map(h => (
-          <FallingHeart
-            key={h.id}
-            x={h.x}
-            y={h.y}
-            onDone={() => setHearts(prev => prev.filter(ph => ph.id !== h.id))}
-          />
-        ))}
       </div>
     </div>
   );
