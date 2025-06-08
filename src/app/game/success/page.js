@@ -1,10 +1,10 @@
-'use client'
+'use client';
 
-import React from 'react'
-import { useRouter } from 'next/navigation'
+import React from 'react';
+import { useRouter } from 'next/navigation';
 
 const Success = () => {
-  const router = useRouter()
+  const router = useRouter();
 
   return (
     <div className="relative flex flex-col items-center justify-center min-h-screen font-pixel text-black p-6 overflow-hidden">
@@ -15,20 +15,20 @@ const Success = () => {
       />
 
       {/* 主要內容 */}
-      <div className="animate-fade-in flex flex-col items-center justify-center w-full gap-6">
-        <h1 className="text-6xl font-bold text-black drop-shadow-[2px_2px_0_#ffffff]">
+      <div className="animate-fade-in flex flex-col items-center justify-center w-full max-w-3xl gap-6 text-center">
+        <h1 className="text-4xl sm:text-6xl font-bold text-black drop-shadow-[2px_2px_0_#ffffff]">
           <strong>Level Completed!</strong>
         </h1>
 
         <button
           onClick={() => router.push('/')}
-          className="text-2xl px-6 py-3 bg-[#222] text-white border-[4px] border-black hover:bg-gray-800 pixel-border transition duration-200 font-bold"
+          className="text-xl sm:text-2xl px-6 py-3 bg-[#222] text-white border-[4px] border-black hover:bg-gray-800 pixel-border transition duration-200 font-bold"
         >
           <strong>Home</strong>
         </button>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Success
+export default Success;

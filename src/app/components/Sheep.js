@@ -33,11 +33,17 @@ const Sheep = ({ id, type, position, direction, onClick, sheepRefs }) => {
       ref={ref}
       src={src}
       alt={`${type} sheep`}
-      className={`absolute w-32 h-32 cursor-pointer transition-opacity duration-200 ${isFading ? 'opacity-0' : 'opacity-100'}`}
+      className={`
+        absolute 
+        cursor-pointer 
+        transition-opacity duration-200 
+        ${isFading ? 'opacity-0' : 'opacity-100'} 
+        w-16 sm:w-20 md:w-24 lg:w-28 xl:w-32
+        h-auto
+      `}
       style={{
         left: position.x,
         top: position.y,
-        transition: 'opacity 0.2s ease',
       }}
       onClick={handleClick}
     />

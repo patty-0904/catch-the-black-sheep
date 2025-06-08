@@ -19,29 +19,29 @@ const FailContent = () => {
       />
 
       {/* 主要內容 */}
-      <div className="animate-fade-in flex flex-col items-center justify-center w-full gap-6">
-        <h1 className="text-6xl font-bold text-black drop-shadow-[2px_2px_0_#ffffff]">
+      <div className="animate-fade-in flex flex-col items-center justify-center w-full max-w-3xl gap-6 text-center">
+        <h1 className="text-4xl sm:text-6xl font-bold text-black drop-shadow-[2px_2px_0_#ffffff]">
           <strong>Level Failed</strong>
         </h1>
 
-        <div className="flex gap-4">
+        <div className="flex flex-wrap justify-center gap-4 w-full">
           <button
             onClick={() => router.push(`/game/level-${previousLevel}`)}
-            className="text-2xl px-6 py-3 bg-[#222] text-white border-[4px] border-black hover:bg-gray-800 pixel-border transition duration-200 font-bold"
+            className="text-xl sm:text-2xl px-6 py-3 bg-[#222] text-white border-[4px] border-black hover:bg-gray-800 pixel-border transition duration-200 font-bold"
           >
             <strong>Previous Level</strong>
           </button>
 
           <button
             onClick={() => router.push(`/game/level-${currentLevel}`)}
-            className="text-2xl px-6 py-3 bg-[#222] text-white border-[4px] border-black hover:bg-gray-800 pixel-border transition duration-200 font-bold"
+            className="text-xl sm:text-2xl px-6 py-3 bg-[#222] text-white border-[4px] border-black hover:bg-gray-800 pixel-border transition duration-200 font-bold"
           >
             <strong>Retry</strong>
           </button>
 
           <button
             onClick={() => router.push('/')}
-            className="text-2xl px-6 py-3 bg-[#222] text-white border-[4px] border-black hover:bg-gray-800 pixel-border transition duration-200 font-bold"
+            className="text-xl sm:text-2xl px-6 py-3 bg-[#222] text-white border-[4px] border-black hover:bg-gray-800 pixel-border transition duration-200 font-bold"
           >
             <strong>Home</strong>
           </button>
