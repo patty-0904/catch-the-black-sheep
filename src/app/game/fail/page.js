@@ -1,14 +1,14 @@
-'use client'
+'use client';
 
-import React from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import React, { Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 
-const Fail = () => {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const levelParam = searchParams.get('level') || '1'
-  const currentLevel = parseInt(levelParam)
-  const previousLevel = currentLevel > 1 ? currentLevel - 1 : 1
+const FailContent = () => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const levelParam = searchParams.get('level') || '1';
+  const currentLevel = parseInt(levelParam);
+  const previousLevel = currentLevel > 1 ? currentLevel - 1 : 1;
 
   return (
     <div className="relative flex flex-col items-center justify-center min-h-screen font-pixel text-black p-6 overflow-hidden">
@@ -48,7 +48,13 @@ const Fail = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Fail
+export default function FailPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <FailContent />
+    </Suspense>
+  );
+}
